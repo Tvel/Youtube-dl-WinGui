@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,10 +19,23 @@ namespace Youtube_dl_WinGui
         public Form1()
         {
             InitializeComponent();
+            Check_YoutubeDL();
+            
+        }
+
+        private static bool Check_YoutubeDL()
+        {
+            if (!File.Exists("youtube-dl.exe"))
+            {
+                MessageBox.Show("Cannot find Youtube-dl.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return true;
+            }
+            return false;
         }
 
         private void Checkbutton_Click(object sender, EventArgs e)
         {
+            if (Check_YoutubeDL()) return;
             Process startprog = new Process();
             
            // ProcessStartInfo startprog = new ProcessStartInfo();        
@@ -54,6 +68,7 @@ namespace Youtube_dl_WinGui
 
         private void GoButton_Click(object sender, EventArgs e)
         {
+            if (Check_YoutubeDL()) return;
             if (this.Formatbox.SelectedIndex == -1) return;
             string choice = Formatbox.SelectedItem.ToString();
             choice = choice.Substring(0, choice.IndexOf(" "));
