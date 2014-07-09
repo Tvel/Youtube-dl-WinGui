@@ -57,7 +57,10 @@ namespace Youtube_dl_WinGui
             {
                 if (output1[i].Contains("[info] Available formats for")) showPlace = i;
             }
-
+            if (File.Exists("ffmpeg.exe"))
+                Formatbox.Items.Add("bestvideo+bestaudio           BEST VIDEO+AUDIO - FFMPEG MERGE");
+            Formatbox.Items.Add("bestvideo              BEST VIDEO");
+            Formatbox.Items.Add("bestaudio              BEST Audio");
 
             for (int i = showPlace + 2; i < output1.Length; i++ )
             {
