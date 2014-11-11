@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 // Tosil Velkov - tosil@velkoff.net
 
@@ -74,7 +75,15 @@ namespace Youtube_dl_WinGui
             if (Check_YoutubeDL()) return;
             if (this.Formatbox.SelectedIndex == -1) return;
             string choice = Formatbox.SelectedItem.ToString();
-            choice = choice.Substring(0, choice.IndexOf(" "));
+            
+            MatchCollection matches = Regex.Matches(choice, @"^.*?(?=m4v|mp4|m4a|flv|mpa|mpg|wav|flac|ogg|oga|3gp|BEST)");
+            if (matches.Count == 0)
+            {
+                DebugLabel.Text = "No valid choice for format";
+                return;
+            }
+            choice = matches[0].ToString();
+            choice = choice.TrimEnd();
             //DebugLabel.Text = choice;
 
             Process startprogd = new Process();
@@ -86,12 +95,12 @@ namespace Youtube_dl_WinGui
 
             if (string.IsNullOrWhiteSpace(this.DestinationBox.Text.ToString()))
             {
-                startprogd.StartInfo.Arguments = "-f " + choice + " " + URLbox.Text;
+                startprogd.StartInfo.Arguments = "-f \"" + choice + "\" " + URLbox.Text;
                // DebugLabel.Text = "-f " + choice + " " + URLbox.Text;
             }
             else
             {
-                startprogd.StartInfo.Arguments = "-f " + choice + " " + URLbox.Text + @" -o """ + this.DestinationBox.Text.ToString().Trim() + @"\%(title)s-%(id)s.%(ext)s""";
+                startprogd.StartInfo.Arguments = "-f \"" + choice + "\" " + URLbox.Text + @" -o """ + this.DestinationBox.Text.ToString().Trim() + @"\%(title)s-%(id)s.%(ext)s""";
                // DebugLabel.Text = startprogd.StartInfo.Arguments.ToString() + "\n";
             }
            
